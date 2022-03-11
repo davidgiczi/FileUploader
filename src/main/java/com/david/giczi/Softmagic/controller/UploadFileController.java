@@ -3,22 +3,23 @@ package com.david.giczi.Softmagic.controller;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.david.giczi.Softmagic.util.FileUtility;
 
 @RestController
 @RequestMapping("/softmagic")
 public class UploadFileController {
 
-	
+
 	@PostMapping(value = "/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile[] files) {
 		
@@ -49,5 +50,11 @@ public class UploadFileController {
             directory.mkdir();
         }
     }
+	
+	@GetMapping(value="/foldernames")
+	public ResponseEntity<List<String>> getFolderNames(){
+		return new ResponseEntity<List<String>>(Arrays.asList("Könyvvitel", "Pénzügy", "Adózás", "Egyéb"), HttpStatus.OK);
+	}
 
+	
 }
