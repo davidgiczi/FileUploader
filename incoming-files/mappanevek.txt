@@ -1,6 +1,7 @@
 - 
 Könyvvitel
+Cégadatok
+Munkaügy
 Pénzügy
 Adózás
-Munkaügy
 Egyéb
