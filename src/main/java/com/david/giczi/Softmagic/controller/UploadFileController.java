@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import com.david.giczi.Softmagic.util.FileUtility;
+
+import com.david.giczi.Softmagic.service.FileService;
 
 
 @RestController
@@ -23,7 +26,9 @@ import com.david.giczi.Softmagic.util.FileUtility;
 @CrossOrigin
 public class UploadFileController {
 
-
+	@Autowired
+	private FileService fileService;
+	
 	@PostMapping(value = "/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile[] files, @RequestParam("foldername") String folderName) {
 	
@@ -36,7 +41,7 @@ public class UploadFileController {
             createDirIfNotExist(folderName);
             byte[] bytes = new byte[0];
             bytes = file.getBytes();
-            Files.write(Paths.get(FileUtility.folderPath + folderName  + "/" + file.getOriginalFilename()), bytes);
+            Files.write(Paths.get(FileService.folderPath + folderName  + "/" + file.getOriginalFilename()), bytes);
             fileCounter++;
         	}
         	
@@ -49,7 +54,7 @@ public class UploadFileController {
     } 
  	
 	private void createDirIfNotExist(String folderName) {
-        File directory = new File(FileUtility.folderPath + folderName);
+        File directory = new File(FileService.folderPath + folderName);
         if (!directory.exists()) {
             directory.mkdir();
         }
@@ -59,7 +64,7 @@ public class UploadFileController {
 	public ResponseEntity<List<String>> getFolderNames(){
 		List<String> folderNames;
 		try {
-			folderNames = FileUtility.getFolderNames();
+			folderNames = fileService.getFolderNames();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return new ResponseEntity<List<String>>(Arrays.asList("Nem olvasható a \"mappanevek.txt\" fájl."), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -67,5 +72,15 @@ public class UploadFileController {
 		return new ResponseEntity<List<String>>(folderNames, HttpStatus.OK);
 	}
 
+	@PostMapping(value = "/getPermission")
+	public ResponseEntity<Boolean> getPermission(@RequestParam("identifier") String identifier) throws IOException{
+		
+
+			if(fileService.isEnabled(identifier)) {
+				return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK);
+			}
+				
+		return new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.OK);
+	}
 	
 }
