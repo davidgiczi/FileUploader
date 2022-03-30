@@ -30,6 +30,21 @@ public class FileService {
 		return folders;
 	}
 	
+	public List<String> getClientNames() throws IOException{
+		
+		BufferedReader reader = new BufferedReader(new FileReader(new File(folderPath + "ugyfelek.txt")));
+		List<String> clients = new ArrayList<>();
+		String folder;
+		while((folder = reader.readLine()) != null) {
+			clients.add(folder);
+		}
+		reader.close();
+		return clients;
+	}
+	
+	
+	
+	
 	public boolean isEnabled(String inputData) throws IOException {
 		try (BufferedReader reader = new BufferedReader(new FileReader(new File(folderPath + "jelszo.txt")))) {
 			return (reader.readLine()).equals(inputData);

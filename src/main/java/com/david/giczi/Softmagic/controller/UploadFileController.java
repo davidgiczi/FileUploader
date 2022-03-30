@@ -72,6 +72,18 @@ public class UploadFileController {
 		return new ResponseEntity<List<String>>(folderNames, HttpStatus.OK);
 	}
 
+	@GetMapping(value="/clients")
+	public ResponseEntity<List<String>> getCilentNames(){
+		List<String> clientNames;
+		try {
+			clientNames = fileService.getClientNames();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<String>>(Arrays.asList("Nem olvasható az \"ugyfelek.txt\" fájl."), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<List<String>>(clientNames, HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "/getPermission")
 	public ResponseEntity<Boolean> getPermission(@RequestParam("identifier") String identifier) throws IOException{
 		
