@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +29,9 @@ public class UploadFileController {
 	private FileService fileService;
 	
 	@PostMapping(value = "/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile[] files, @RequestParam("foldername") String folderName) {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile[] files, 
+    		@RequestParam("foldername") String folderName,
+    		@RequestParam("clientname") String clientName) {
 	
 		MultipartFile mistakedFile = null;
 		int fileCounter = 0;
@@ -38,10 +39,10 @@ public class UploadFileController {
 		try {
         	for (MultipartFile file : files) {
         	mistakedFile = file;
-            createDirIfNotExist(folderName);
+        	createDirIfNotExist(folderName);
             byte[] bytes = new byte[0];
             bytes = file.getBytes();
-            Files.write(Paths.get(FileService.folderPath + folderName  + "/" + file.getOriginalFilename()), bytes);
+            Files.write(Paths.get(FileService.folderPath + folderName  + "/" + clientName +"/" + file.getOriginalFilename()), bytes);
             fileCounter++;
         	}
         	
