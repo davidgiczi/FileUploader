@@ -29,9 +29,9 @@ public class UploadFileController {
 	private FileService fileService;
 	
 	@PostMapping(value = "/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile[] files, 
-    		@RequestParam("foldername") String folderName,
-    		@RequestParam("clientname") String clientName) {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile[] files,
+    		@RequestParam("clientname") String clientName,
+    		@RequestParam("foldername") String folderName) {
 	
 		MultipartFile mistakedFile = null;
 		int fileCounter = 0;
@@ -39,10 +39,10 @@ public class UploadFileController {
 		try {
         	for (MultipartFile file : files) {
         	mistakedFile = file;
-        	createDirIfNotExist(folderName);
+        	createDirIfNotExist(clientName, folderName);
             byte[] bytes = new byte[0];
             bytes = file.getBytes();
-            Files.write(Paths.get(FileService.folderPath + folderName  + "/" + clientName +"/" + file.getOriginalFilename()), bytes);
+            Files.write(Paths.get(FileService.folderPath + clientName  + "/" + folderName +"/" + file.getOriginalFilename()), bytes);
             fileCounter++;
         	}
         	
@@ -54,10 +54,12 @@ public class UploadFileController {
         return new ResponseEntity<String>(files.length + " db elküldött fájlból " +  fileCounter +  " db fájl feltöltve.", HttpStatus.OK);
     } 
  	
-	private void createDirIfNotExist(String folderName) {
-        File directory = new File(FileService.folderPath + folderName);
-        if (!directory.exists()) {
-            directory.mkdir();
+	private void createDirIfNotExist(String clientName, String folderName) {
+        File clientDirectory = new File(FileService.folderPath + clientName);
+        if ( !clientDirectory.exists() ) {
+            clientDirectory.mkdir();
+            File folderDirectory = new File(clientDirectory.getAbsolutePath() + "/" + folderName);
+            folderDirectory.mkdir();
         }
     }
 	
