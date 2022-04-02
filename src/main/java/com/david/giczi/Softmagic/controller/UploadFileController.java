@@ -59,7 +59,9 @@ public class UploadFileController {
         if ( !clientDirectory.exists() ) {
             clientDirectory.mkdir();
             File folderDirectory = new File(clientDirectory.getAbsolutePath() + "/" + folderName);
+            if( !folderDirectory.exists()) {
             folderDirectory.mkdir();
+            }
         }
     }
 	
