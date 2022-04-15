@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -14,13 +12,13 @@ import org.springframework.stereotype.Service;
 public class FileService {
 	
 	
-	public static String folderPath =  "./incoming-files/";
-	public static Path filePath = Paths.get(folderPath);
+	public static String appFolder =  "./softmagic-app/init/";
+	public static String uploadingFileFolder = "./softmagic-app/uploading-files/";
 
 
 	public List<String> getFolderNames() throws IOException{
 		
-		BufferedReader reader = new BufferedReader(new FileReader(new File(folderPath + "mappanevek.txt")));
+		BufferedReader reader = new BufferedReader(new FileReader(new File(appFolder +"mappanevek.txt")));
 		List<String> folders = new ArrayList<>();
 		String folder;
 		while((folder = reader.readLine()) != null) {
@@ -32,7 +30,7 @@ public class FileService {
 	
 	public List<String> getClientNames() throws IOException{
 		
-		BufferedReader reader = new BufferedReader(new FileReader(new File(folderPath + "ugyfelek.txt")));
+		BufferedReader reader = new BufferedReader(new FileReader(new File(appFolder + "ugyfelek.txt")));
 		List<String> clients = new ArrayList<>();
 		String folder;
 		while((folder = reader.readLine()) != null) {
@@ -42,11 +40,9 @@ public class FileService {
 		return clients;
 	}
 	
-	
-	
-	
+
 	public boolean isEnabled(String inputData) throws IOException {
-		try (BufferedReader reader = new BufferedReader(new FileReader(new File(folderPath + "jelszo.txt")))) {
+		try (BufferedReader reader = new BufferedReader(new FileReader(new File(appFolder + "jelszo.txt")))) {
 			return (reader.readLine()).equals(inputData);
 		}
 	}

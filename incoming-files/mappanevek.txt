@@ -1,7 +1,0 @@
-- 
-Könyvvitel
-Cégadatok
-Munkaügy
-Pénzügy
-Adózás
-Egyéb
