@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.david.giczi.Softmagic.model.Doc;
+import com.david.giczi.Softmagic.model.Link;
 import com.david.giczi.Softmagic.service.FileService;
 
 
@@ -104,4 +107,15 @@ public class UploadFileController {
 		return new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/docs")
+	public ResponseEntity<List<Doc>> getDocs() throws IOException{
+		List<Doc> docs = fileService.getDocs();
+		return new ResponseEntity<List<Doc>>(docs, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/links")
+	public ResponseEntity<List<Link>> getLinks() throws IOException{
+		List<Link> links = fileService.getLinks();
+		return new ResponseEntity<List<Link>>(links, HttpStatus.OK);
+	}
 }

@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import com.david.giczi.Softmagic.model.Doc;
+import com.david.giczi.Softmagic.model.Link;
 
 @Service
 public class FileService {
@@ -45,5 +47,41 @@ public class FileService {
 		try (BufferedReader reader = new BufferedReader(new FileReader(new File(appFolder + "jelszo.txt")))) {
 			return (reader.readLine()).equals(inputData);
 		}
+	}
+	
+	public List<Doc> getDocs() throws IOException{
+		
+		BufferedReader reader = new BufferedReader(new FileReader(new File(appFolder + "dokumentumtar.txt")));
+		List<Doc> docs = new ArrayList<>();
+		int id = 0;
+		String docTitle;
+		while((docTitle = reader.readLine()) != null) {
+			String[] titleComponents = docTitle.split("\\.");
+			Doc doc = new Doc();
+			doc.setId(++id);
+			doc.setTitle(titleComponents[0]);
+			doc.setExtension(titleComponents[1]);
+			docs.add(doc);
+		}
+		reader.close();
+		return docs;
+	}
+	
+	public List<Link> getLinks() throws IOException{
+		
+		BufferedReader reader = new BufferedReader(new FileReader(new File(appFolder + "linkek.txt")));
+		List<Link> links = new ArrayList<>();
+		int id = 0;
+		String row;
+		while((row = reader.readLine()) != null) {
+			String[] linkComponents = row.split("\\*");
+			Link link = new Link();
+			link.setId(++id);
+			link.setTitle(linkComponents[0]);
+			link.setHref(linkComponents[1]);
+			links.add(link);
+		}
+		reader.close();
+		return links;
 	}
 }
