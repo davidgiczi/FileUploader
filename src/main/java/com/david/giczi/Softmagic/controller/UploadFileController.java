@@ -1,13 +1,20 @@
 package com.david.giczi.Softmagic.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.david.giczi.Softmagic.model.Doc;
 import com.david.giczi.Softmagic.model.Link;
 import com.david.giczi.Softmagic.service.FileService;
@@ -118,4 +124,19 @@ public class UploadFileController {
 		List<Link> links = fileService.getLinks();
 		return new ResponseEntity<List<Link>>(links, HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/doc", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public ResponseEntity<InputStreamResource> getDoc(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	int id = Integer.parseInt(request.getParameter("docId"));
+	Doc chosenDoc = fileService.getDocs().get(id - 1);
+	String docName = chosenDoc.getTitle() + "." + chosenDoc.getExtension();
+	File doc =  new File("./softmagic-app/init/docs/" + docName);
+    long length = doc.length();
+    InputStreamResource inputStreamResource = new InputStreamResource(new FileInputStream(doc));
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.setContentLength(length);
+    httpHeaders.setCacheControl(CacheControl.noCache().getHeaderValue());
+    
+    return new ResponseEntity<InputStreamResource>(inputStreamResource, httpHeaders, HttpStatus.OK);
+}
 }
