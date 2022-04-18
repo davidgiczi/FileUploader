@@ -114,14 +114,26 @@ public class UploadFileController {
 	}
 	
 	@GetMapping(value = "/docs")
-	public ResponseEntity<List<Doc>> getDocs() throws IOException{
-		List<Doc> docs = fileService.getDocs();
+	public ResponseEntity<List<Doc>> getDocs(){
+		List<Doc> docs = null;
+		try {
+			docs = fileService.getDocs();
+		} catch (IOException | ArrayIndexOutOfBoundsException e) {
+			e.printStackTrace();
+			new ResponseEntity<List<Doc>>(docs, HttpStatus.OK);
+		}
 		return new ResponseEntity<List<Doc>>(docs, HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/links")
-	public ResponseEntity<List<Link>> getLinks() throws IOException{
-		List<Link> links = fileService.getLinks();
+	public ResponseEntity<List<Link>> getLinks() {
+		List<Link> links = null;
+		try {
+			links = fileService.getLinks();
+		} catch (IOException | ArrayIndexOutOfBoundsException e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<Link>>(links, HttpStatus.OK);
+		}
 		return new ResponseEntity<List<Link>>(links, HttpStatus.OK);
 	}
 	
@@ -130,9 +142,15 @@ public class UploadFileController {
 	int id = Integer.parseInt(request.getParameter("docId"));
 	Doc chosenDoc = fileService.getDocs().get(id - 1);
 	String docName = chosenDoc.getTitle() + "." + chosenDoc.getExtension();
+	InputStreamResource inputStreamResource = null;
 	File doc =  new File("./softmagic-app/init/docs/" + docName);
-    long length = doc.length();
-    InputStreamResource inputStreamResource = new InputStreamResource(new FileInputStream(doc));
+	try {
+    inputStreamResource = new InputStreamResource(new FileInputStream(doc));
+	} catch (IOException e) {
+		e.printStackTrace();
+		return new ResponseEntity<InputStreamResource>(inputStreamResource, new HttpHeaders(), HttpStatus.OK);
+	}
+	long length = doc.length();
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.setContentLength(length);
     httpHeaders.setCacheControl(CacheControl.noCache().getHeaderValue());

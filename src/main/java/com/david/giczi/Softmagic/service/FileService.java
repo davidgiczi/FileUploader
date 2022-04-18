@@ -49,7 +49,7 @@ public class FileService {
 		}
 	}
 	
-	public List<Doc> getDocs() throws IOException{
+	public List<Doc> getDocs() throws IOException, ArrayIndexOutOfBoundsException{
 		
 		BufferedReader reader = new BufferedReader(new FileReader(new File(appFolder + "dokumentumtar.txt")));
 		List<Doc> docs = new ArrayList<>();
@@ -67,7 +67,7 @@ public class FileService {
 		return docs;
 	}
 	
-	public List<Link> getLinks() throws IOException{
+	public List<Link> getLinks() throws IOException, ArrayIndexOutOfBoundsException{
 		
 		BufferedReader reader = new BufferedReader(new FileReader(new File(appFolder + "linkek.txt")));
 		List<Link> links = new ArrayList<>();
