@@ -137,6 +137,7 @@ public class UploadFileController {
 		return new ResponseEntity<List<Link>>(links, HttpStatus.OK);
 	}
 	
+	@CrossOrigin(origins = "https://kapcsolat.softmagic.hu")
 	@GetMapping(value = "/doc", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public ResponseEntity<InputStreamResource> getDoc(HttpServletRequest request, HttpServletResponse response) throws IOException {
 	int id = Integer.parseInt(request.getParameter("docId"));
